@@ -1,0 +1,37 @@
+{
+  "name": "Mohamed Rizad",
+  "email": "chaingate@mohamedrizad.me",
+  "nfc_id": "0088973186",
+  "access_level": "IT Staff",
+  "created_at": "2025-05-18T21:57:41.979000",
+  "active": true,
+  "access_history": [
+    "",
+    {
+      "timestamp": "2025-05-18T19:34:53.040000",
+      "access_time": {
+        "date": "2025-05-18",
+        "time": "19:34:53",
+        "unix_time": 1747596893
+      },
+      "nfc_id": "1674191876",
+      "card_data": {
+        "original_uid": "4:24:ca:63:ff:61:80",
+        "processed_uid": "63:ca:24:04"
+      },
+      "blockchain_data": {
+        "tx_hash": "91b531ed4b2d3e644323c2d9a1bcce3c15c2107f5251395ab2fd88b1c30a63ed",
+        "block_time": "2025-05-18 19:34:53",
+        "stored_value": "1674191876"
+      },
+      "access_status": "granted",
+      "access_method": "nfc_card",
+      "success": true
+    }
+  ],
+  "position": "developer",
+  "updated_at": "2025-06-29T10:56:05.763000",
+  "last_access": "2025-06-29 11:08:08",
+  "last_gate_id": "08805C43CA48",
+  "last_gate_name": "Server Room"
+}
