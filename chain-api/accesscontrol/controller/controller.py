@@ -18,7 +18,6 @@ class pn532data(APIView):
     def post(self, request):
         
         data = request.data
-        print("Received data:", data)
         uid_hex = data.get('uidHex', '')
         uid_length = data.get('uidLength', 0)
         gateId = data.get('gateId', None)
@@ -27,16 +26,10 @@ class pn532data(APIView):
             return Response({"error": "No UID data provided"}, status=status.HTTP_400_BAD_REQUEST)
         
         standardized_uid = self.standardize_uid(uid_hex)
-        print("Standardized UID:", standardized_uid)
-        
         processed_uid = self.process_uid(standardized_uid, 4)
-        
-        print("Original UID:", uid_hex)
-        print("Processed UID (4 bytes reversed):", processed_uid)
         
         try:
             clean_uid = processed_uid.replace(':', '')
-            print("Clean UID:", clean_uid)
             decimal_value = int(clean_uid, 16)
             decimal_str = str(decimal_value)
             if len(decimal_str) < 10:
@@ -82,7 +75,8 @@ class pn532data(APIView):
                 "device_info": {
                     "original_uid": uid_hex,
                     "processed_uid": processed_uid
-                }
+                },
+                
             }
         if user:
             if user_access_level not in device_access_levels:
@@ -98,7 +92,7 @@ class pn532data(APIView):
             print(tx_hash)
             if tx_hash:
                 response_data["blockchain_tx"] = tx_hash
-                history_updated = update_access_history(user_id, access_data, tx_hash)
+                history_updated = update_access_history(user_id, access_data, tx_hash, gateId, GateName, location)
                 accesslog_entry = {
                     "timestamp": timestamp,
                     "gate_name": GateName,

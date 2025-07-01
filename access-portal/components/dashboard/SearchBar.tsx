@@ -39,6 +39,9 @@ interface UserDetails {
   last_gate_id: string
   last_gate_name: string
   access_history: Array<{
+    gateId: string
+    gate_name: string
+    location: string
     timestamp: string
     access_time: {
       date: string
@@ -144,8 +147,18 @@ export function SearchBar() {
   const fetchUserSummary = async (userId: string) => {
     try {
       setIsLoadingSummary(true)
-      const response = await fetch(`${API_BASE_URL}/api/summarize/${userId}/`)
-      
+      const response = await fetch(`${API_BASE_URL}/api/summarize/${userId}/`, {
+        credentials: 'include',
+      })
+      if (response.status === 401) {
+              toast({
+                title: "Session Expired",
+                description: "Please log in again to continue.",
+                variant: "destructive"
+              })
+              router.push("/login")
+              return
+            }
       if (!response.ok) {
         throw new Error(`Failed to fetch user summary: ${response.statusText}`)
       }
@@ -179,8 +192,18 @@ export function SearchBar() {
       setSearchQuery("")
       setChatMessages([])
 
-      const response = await fetch(`${API_BASE_URL}/api/search/${user.id}/`)
-      
+      const response = await fetch(`${API_BASE_URL}/api/search/${user.id}/`, {
+        credentials: 'include',
+      })
+      if (response.status === 401) {
+        toast({
+          title: "Session Expired",
+          description: "Please log in again to continue.",
+          variant: "destructive"
+        })
+        router.push("/login")
+        return
+      }
       if (!response.ok) {
         throw new Error(`Failed to fetch user details: ${response.statusText}`)
       }
@@ -217,12 +240,21 @@ export function SearchBar() {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify({
           userid: selectedUser.nfc_id,
           message: messageToSend
         })
       })
-
+      if (response.status === 401) {
+        toast({
+          title: "Session Expired",
+          description: "Please log in again to continue.",
+          variant: "destructive"
+        })
+        router.push("/login")
+        return
+      }
       if (!response.ok) {
         throw new Error(`Chat request failed: ${response.statusText}`)
       }
@@ -487,8 +519,8 @@ export function SearchBar() {
                                 <div className="flex items-center gap-3">
                                   <div className={`w-2 h-2 rounded-full ${access.success ? 'bg-green-500' : 'bg-red-500'}`} />
                                   <div className="min-w-0 flex-1">
-                                    <p className="text-sm font-medium text-gray-900 truncate">{access.access_time.date}</p>
-                                    <p className="text-xs text-gray-500 truncate">{access.access_time.time} • {access.access_method}</p>
+                                    <p className="text-sm font-medium text-gray-900 truncate">{access.gate_name} ({access.location})</p>
+                                    <p className="text-xs text-gray-500 truncate">{access.access_time.time} • {access.access_time.date}</p>
                                   </div>
                                 </div>
                                 <Badge 

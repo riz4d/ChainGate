@@ -6,10 +6,13 @@ from datetime import datetime
 from bson import ObjectId
 from accesscontrol.connections.mongodb.dbconnect import users_collection
 
-def update_access_history(user_id, access_data, tx_hash):
+def update_access_history(user_id, access_data, tx_hash, gateId=None, GateName=None, location=None):
     try:
         timestamp = datetime.now()
         history_entry = {
+            "gate_name": GateName,
+            "location": location,
+            "gateId": gateId,
             "timestamp": timestamp,
             "access_time": {
                 "date": timestamp.strftime("%Y-%m-%d"),
