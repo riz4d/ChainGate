@@ -26,15 +26,6 @@ export default function LoginPage() {
 
   const fullText = "Do you really want to sign in?"
 
-  // // Check if user is already logged in
-  // useEffect(() => {
-  //   const adminData = sessionStorage.getItem('admin')
-  //   if (adminData) {
-  //     router.push('/')
-  //   }
-  // }, [router])
-
-  // Typewriter effect
   useEffect(() => {
     if (!showLoginForm) {
       let currentIndex = 0
@@ -45,13 +36,12 @@ export default function LoginPage() {
         } else {
           clearInterval(typewriterInterval)
         }
-      }, 100) // Adjust speed here (lower = faster)
+      }, 100)
 
       return () => clearInterval(typewriterInterval)
     }
   }, [showLoginForm])
 
-  // Blinking cursor effect
   useEffect(() => {
     const cursorInterval = setInterval(() => {
       setShowCursor(prev => !prev)
@@ -62,7 +52,6 @@ export default function LoginPage() {
 
   const handleShowLoginForm = async () => {
     setIsTransitioning(true)
-    // Small delay for animation effect
     await new Promise(resolve => setTimeout(resolve, 300))
     setShowLoginForm(true)
     setIsTransitioning(false)
@@ -74,18 +63,16 @@ export default function LoginPage() {
     setError("")
 
     try {
-      // Validate inputs
       if (!email || !password) {
         throw new Error("Please enter both email and password")
       }
 
-      // Call login API
       const response = await fetch(`${API_BASE_URL}/api/supervisor/access/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        credentials: 'include', // Important: Include cookies for session management
+        credentials: 'include',
         body: JSON.stringify({ email, password })
       })
 
@@ -95,7 +82,6 @@ export default function LoginPage() {
         throw new Error(data.error || 'Login failed')
       }
 
-      // Store admin info in sessionStorage (session is managed by backend cookies)
       sessionStorage.setItem('admin', JSON.stringify({
         id: data.admin_id,
         name: data.name,
@@ -108,7 +94,6 @@ export default function LoginPage() {
         name: data.name
       })
       
-      // Redirect to dashboard
       router.push("/")
       
     } catch (err: any) {

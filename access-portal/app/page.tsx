@@ -10,17 +10,13 @@ import { NavigationProvider, useNavigation } from "@/components/navigation/Navig
 import { RefreshCw } from "lucide-react"
 import { toast } from "@/hooks/use-toast"
 
-// Import section components
 import { NFCTagsPage } from "@/components/sections/NFCTagsPage"
 import { VerificationLogsPage } from "@/components/sections/VerificationLogsPage"
 import { UserManagementPage } from "@/components/sections/UserManagementPage"
 import { BlockchainStatusPage } from "@/components/sections/BlockchainStatusPage"
 import SettingsPage from "@/components/sections/SettingsPage"
-
-// API Base URL
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
 
-// TypeScript interface for API response
 interface DashboardApiResponse {
   message: string
   response_time_ms: number
@@ -96,7 +92,6 @@ function DashboardOverview() {
     return () => clearInterval(interval)
   }, [])
 
-  // Show loading state
   if (isLoading && !dashboardData) {
     return (
       <div className="space-y-6 font-exo">
@@ -110,7 +105,6 @@ function DashboardOverview() {
     )
   }
 
-  // Show error state
   if (error && !dashboardData) {
     return (
       <div className="space-y-6 font-exo">
@@ -132,7 +126,6 @@ function DashboardOverview() {
 
   if (!dashboardData) return null
 
-  // Transform API data to component format
   const summaryData = {
     totalTags: dashboardData.total_devices,
     totalVisitors: dashboardData.total_visitors_count,
@@ -140,7 +133,6 @@ function DashboardOverview() {
     blockedAttempts: dashboardData.denied_verifications,
   }
 
-  // Transform recent access logs to verification logs format
   const initialLogs = dashboardData.recent_access_logs.map((log, index) => ({
     id: `${log.nfc_id}-${index}`,
     tagId: log.nfc_id,
@@ -148,7 +140,7 @@ function DashboardOverview() {
     timestamp: log.timestamp,
     status: log.access_status === "granted" ? "Verified" as const : "Blocked" as const,
     user: log.name,
-    duration: 0 // No duration data from API
+    duration: 0
   }))
 
   return (
@@ -173,7 +165,6 @@ function DashboardOverview() {
   )
 }
 
-// Content renderer based on current section
 function DashboardContent() {
   const { currentSection } = useNavigation()
 
@@ -209,13 +200,11 @@ export default function Dashboard() {
   return (
     <NavigationProvider>
       <div className="flex flex-col min-h-screen bg-gradient-to-br from-blue-50/20 via-white to-indigo-50/20">
-        {/* Fixed Header */}
         <div className="fixed top-0 left-0 right-0 z-30 bg-white/95 backdrop-blur-sm shadow-sm border-b border-gray-200">
           <DashboardHeader />
         </div>
-        
-        {/* Main Content Area */}
-        <div className="flex-1 pt-16"> {/* pt-16 to account for fixed header height */}
+
+        <div className="flex-1 pt-16">
           <DashboardContent />
         </div>
       </div>
