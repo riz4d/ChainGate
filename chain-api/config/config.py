@@ -8,7 +8,7 @@ MONGODB = {
     "user": os.getenv("MONGODB_USER", "riza"),
     "password": os.getenv("MONGODB_PASSWORD", "PUb2ZnDr3QHRgzuf"),
     "connection_string": os.getenv("MONGODB_CONNECTION_STRING"),
-    "database_name": os.getenv("MONGODB_DATABASE_NAME", "bises"),
+    "database_name": os.getenv("MONGODB_DATABASE_NAME", "chaingate"),
     "collections": {
         "users": os.getenv("MONGODB_COLLECTION_USERS", "users"),
         "cards": os.getenv("MONGODB_COLLECTION_CARDS", "cards"),
