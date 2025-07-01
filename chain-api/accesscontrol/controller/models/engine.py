@@ -59,5 +59,3 @@ Provide only a direct factual answer:"""
     )
 
     return response.json()["response"].strip()
-# summarized_response = summarize("When was the last access?", user_data)
-# print(summarized_response)
