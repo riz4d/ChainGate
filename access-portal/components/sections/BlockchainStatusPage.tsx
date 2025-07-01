@@ -72,7 +72,7 @@ interface BlockchainMetric {
 }
 
 // API integration functions
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL 
 
 const fetchChainInfo = async (): Promise<ChainInfo> => {
   try {

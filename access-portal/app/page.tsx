@@ -15,7 +15,7 @@ import { VerificationLogsPage } from "@/components/sections/VerificationLogsPage
 import { UserManagementPage } from "@/components/sections/UserManagementPage"
 import { BlockchainStatusPage } from "@/components/sections/BlockchainStatusPage"
 import SettingsPage from "@/components/sections/SettingsPage"
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL
 
 interface DashboardApiResponse {
   message: string

@@ -37,7 +37,7 @@ const navigationItems = [
   { title: "Settings", section: "settings" as const, icon: Settings },
 ]
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL 
 
 export function DashboardHeader() {
   const { currentSection, setCurrentSection } = useNavigation()
