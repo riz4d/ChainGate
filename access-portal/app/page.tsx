@@ -45,18 +45,28 @@ interface DashboardApiResponse {
   }>
 }
 
-// Dashboard Overview Component (with API integration)
 function DashboardOverview() {
   const [dashboardData, setDashboardData] = useState<DashboardApiResponse | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  // Fetch dashboard data from API
   const fetchDashboardData = async () => {
     try {
       setError(null)
-      const response = await fetch(`${API_BASE_URL}/api/overview/`)
+      const response = await fetch(`${API_BASE_URL}/api/overview/`, {
+        credentials: "include",
+      })
       
+      if (response.status === 401) {
+        toast({
+          title: "Session Expired",
+          description: "Please log in again to continue.",
+          variant: "destructive"
+        })
+        router.push("/login")
+        return
+      }
+
       if (!response.ok) {
         throw new Error(`Failed to fetch dashboard data: ${response.statusText}`)
       }
@@ -76,11 +86,9 @@ function DashboardOverview() {
     }
   }
 
-  // Load data on component mount and set up auto-refresh
   useEffect(() => {
     fetchDashboardData()
     
-    // Set up auto-refresh every 5 seconds
     const interval = setInterval(() => {
       fetchDashboardData()
     }, 5000)

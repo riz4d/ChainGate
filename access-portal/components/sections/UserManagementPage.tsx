@@ -1,25 +1,4 @@
 "use client"
-
-/*
- * UserManagementPage - NFC Verification System
- * 
- * API Integration:
- * - Fetches users from: GET /api/users/
- * - Creates users via: POST /api/users/
- * - Updates users via: PUT /api/users/{id}/
- * - Deletes users via: DELETE /api/users/{id}/
- * 
- * Environment Variables:
- * - NEXT_PUBLIC_API_URL: Base URL for the API (default: http://localhost:8000)
- * 
- * Features:
- * - Real-time CRUD operations with API
- * - Loading states and error handling
- * - Form validation
- * - Search and filtering
- * - User status management
- */
-
 import { useState, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -71,7 +50,7 @@ interface User {
   name: string
   email: string
   nfc_id: string
-  access_level: string // Changed to string to accept dynamic access level names
+  access_level: string
   created_at: string
   active: boolean
   position: string
@@ -129,7 +108,13 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
 
 const fetchUsers = async (): Promise<UserListResponse> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/users/`)
+    const response = await fetch(`${API_BASE_URL}/api/users/`, {
+      credentials: "include",
+    })
+    if (response.status === 401) {
+      window.location.href = "/login"
+      return Promise.reject('Unauthorized')
+    }
     if (!response.ok) {
       throw new Error(`Failed to fetch users: ${response.statusText}`)
     }
@@ -142,7 +127,13 @@ const fetchUsers = async (): Promise<UserListResponse> => {
 
 const fetchAccessLevels = async (): Promise<AccessLevelsResponse> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/access-levels/`)
+    const response = await fetch(`${API_BASE_URL}/api/access-levels/`, {
+      credentials: "include",
+    })
+    if (response.status === 401) {
+      window.location.href = "/login"
+      return Promise.reject('Unauthorized')
+    }
     if (!response.ok) {
       throw new Error(`Failed to fetch access levels: ${response.statusText}`)
     }
@@ -164,9 +155,14 @@ const createUser = async (userData: {
   try {
     const response = await fetch(`${API_BASE_URL}/api/users/`, {
       method: 'POST',
+      credentials: "include",
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(userData)
     })
+    if (response.status === 401) {
+      window.location.href = "/login"
+      return Promise.reject('Unauthorized')
+    }
     if (!response.ok) {
       throw new Error(`Failed to create user: ${response.statusText}`)
     }
@@ -181,9 +177,14 @@ const updateUser = async (userId: string, userData: Partial<User>): Promise<User
   try {
     const response = await fetch(`${API_BASE_URL}/api/users/${userId}/`, {
       method: 'PUT',
+      credentials: "include",
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(userData)
     })
+    if (response.status === 401) {
+      window.location.href = "/login"
+      return Promise.reject('Unauthorized')
+    }
     if (!response.ok) {
       throw new Error(`Failed to update user: ${response.statusText}`)
     }
@@ -196,9 +197,14 @@ const updateUser = async (userId: string, userData: Partial<User>): Promise<User
 
 const deleteUser = async (userId: string): Promise<void> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/users/${userId}/`, { 
-      method: 'DELETE' 
+    const response = await fetch(`${API_BASE_URL}/api/users/${userId}/`, {
+      method: 'DELETE',
+      credentials: "include",
     })
+    if (response.status === 401) {
+      window.location.href = "/login"
+      return Promise.reject('Unauthorized')
+    }
     if (!response.ok) {
       throw new Error(`Failed to delete user: ${response.statusText}`)
     }

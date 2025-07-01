@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import localFont from "next/font/local";
 import "./globals.css";
 import { Inter, Dancing_Script, Russo_One, Exo_2 } from "next/font/google";
+import AuthProvider from '@/components/AuthProvider';
 const inter = Inter({
   subsets: ["latin"],
   display: "swap",
@@ -38,8 +39,12 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <body className={`${inter.variable} ${dancingScript.variable} ${russone.variable} ${exo.variable}`}>{children}</body>
+    <html lang="en" className="scrollbar-hide">
+      <body className={`${inter.variable} ${dancingScript.variable} ${russone.variable} ${exo.variable} scrollbar-hide`}>
+        <AuthProvider>
+          {children}
+        </AuthProvider>
+      </body>
     </html>
   )
 }

@@ -76,7 +76,13 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
 
 const fetchChainInfo = async (): Promise<ChainInfo> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/blockchain/chain-info/`)
+    const response = await fetch(`${API_BASE_URL}/api/blockchain/chain-info/`, {
+      credentials: "include",
+    })
+    if (response.status === 401) {
+      window.location.href = "/login"
+      return Promise.reject('Unauthorized')
+    }
     if (!response.ok) {
       throw new Error(`Failed to fetch chain info: ${response.statusText}`)
     }
@@ -89,7 +95,13 @@ const fetchChainInfo = async (): Promise<ChainInfo> => {
 
 const fetchTransactions = async (): Promise<TransactionsResponse> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/blockchain/transactions/`)
+    const response = await fetch(`${API_BASE_URL}/api/blockchain/transactions/`, {
+      credentials: "include",
+    })
+    if (response.status === 401) {
+      window.location.href = "/login"
+      return Promise.reject('Unauthorized')
+    }
     if (!response.ok) {
       throw new Error(`Failed to fetch transactions: ${response.statusText}`)
     }

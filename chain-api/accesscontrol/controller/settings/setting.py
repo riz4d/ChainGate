@@ -8,25 +8,23 @@ from datetime import datetime
 import json
 import traceback
 from bson import ObjectId
+from ...middleware.sessioncontroller import verify_session
 
 
 class SettingsView(APIView):
 
     def get(self, request):
-        """
-        Return the settings configuration
-        """
-        try:
-            # Get settings configuration - there should be only one document
-            config = settings_collection.find_one({})
 
-            # If no configuration exists, create default one
+        if not verify_session(request):
+            return Response({"error": "User is not authenticated."}, status=status.HTTP_401_UNAUTHORIZED)
+
+        try:
+            config = settings_collection.find_one({})
             if not config:
                 default_config = self._create_default_config()
                 result = settings_collection.insert_one(default_config)
                 config = settings_collection.find_one({"_id": result.inserted_id})
 
-            # Clean up the ObjectId for JSON response
             if config and '_id' in config:
                 config['_id'] = str(config['_id'])
 
@@ -41,6 +39,9 @@ class SettingsView(APIView):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     def put(self, request):
 
+        if not verify_session(request):
+            return Response({"error": "User is not authenticated."}, status=status.HTTP_401_UNAUTHORIZED)
+
         try:
             config = settings_collection.find_one({})
 
@@ -49,7 +50,6 @@ class SettingsView(APIView):
                     'error': 'Settings configuration not found'
                 }, status=status.HTTP_404_NOT_FOUND)
 
-            # Update the configuration with the new data
             updated_data = request.data
             settings_collection.update_one({"_id": config['_id']}, {"$set": updated_data})
 

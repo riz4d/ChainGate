@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',  # Added for token blacklisting
     'corsheaders',
     'accesscontrol',
 ]
@@ -129,6 +130,8 @@ USE_TZ = True
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,
     "AUTH_HEADER_TYPES": ("Bearer",),
 }
 
@@ -151,11 +154,10 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",  # Added port 3000
     "http://127.0.0.1",
     "http://172.20.10.7:3000",
-    "http://localhost"
+    "http://172.20.10.7"
 ]
 
-# Additional CORS settings
-CORS_ALLOW_CREDENTIALS = True
+
 CORS_ALLOW_METHODS = [
     "GET",
     "POST",
@@ -164,15 +166,33 @@ CORS_ALLOW_METHODS = [
     "DELETE",
     "OPTIONS",
 ]
-CORS_ALLOW_HEADERS = ["*"]
+CORS_ALLOW_HEADERS = [
+    "accept",
+    "accept-encoding",
+    "authorization",
+    "content-type",
+    "dnt",
+    "origin",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
+]
 CORS_EXPOSE_HEADERS = ["Content-Type", "X-CSRFToken", "Authorization"]
 CORS_PREFLIGHT_MAX_AGE = 86400  # 24 hours
 
+# Allow all origins during development (more permissive)
+CORS_ALLOW_ALL_ORIGINS = True  # Only for development
+ # or "None" if cross-origin with HTTPS
+SESSION_COOKIE_SECURE = False 
+SESSION_ENGINE = "django.contrib.sessions.backends.db"
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = 'Lax'  # or 'None' if cross-site
+CORS_ALLOW_CREDENTIALS = True
 # CSRF settings
 CSRF_TRUSTED_ORIGINS = [
     "http://0.0.0.0:3000",
     "http://localhost:3000",
     "http://127.0.0.1:3000",  # Added port 3000
     "http://172.20.10.7:3000",
-    "http://localhost"
+    "http://172.20.10.7"
 ]

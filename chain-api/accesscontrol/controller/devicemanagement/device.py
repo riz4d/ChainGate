@@ -2,18 +2,22 @@ from django.contrib.auth import logout
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny
 from accesscontrol.connections.mongodb.dbconnect import devices_collection
 from datetime import datetime
 import json
 import traceback
 from bson import ObjectId
+from ...middleware.sessioncontroller import verify_session
 
 
 class DeviceManagementView(APIView):
-    #permission_classes = [IsAuthenticated]
-
+    permission_classes = [AllowAny] 
     def get(self, request):
+
+        if not verify_session(request):
+            return Response({"error": "User is not authenticated."}, status=status.HTTP_401_UNAUTHORIZED)
+
         try:
             devices = list(devices_collection.find({}))
             for device in devices:
@@ -34,6 +38,8 @@ class DeviceManagementView(APIView):
             )
 
     def post(self, request):
+        if not verify_session(request):
+            return Response({"error": "User is not authenticated."}, status=status.HTTP_401_UNAUTHORIZED)
         try:
             data = request.data
             print("Received data:", data)
@@ -45,14 +51,12 @@ class DeviceManagementView(APIView):
                         status=status.HTTP_400_BAD_REQUEST
                     )
             
-            # Check if tag_id already exists
             if devices_collection.find_one({"tag_id": data['tag_id']}):
                 return Response(
                     {"error": "Tag ID already exists"},
                     status=status.HTTP_400_BAD_REQUEST
                 )
             
-            # Create new device with proper structure
             new_device = {
                 "tag_id": data['tag_id'],
                 "name": data['name'],
@@ -82,6 +86,8 @@ class DeviceManagementView(APIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
     def put(self, request, device_id=None):
+        if not verify_session(request):
+            return Response({"error": "User is not authenticated."}, status=status.HTTP_401_UNAUTHORIZED)
         try:
             if not device_id:
                 device_id = request.query_params.get('device_id')
@@ -94,7 +100,6 @@ class DeviceManagementView(APIView):
             
             data = request.data
             
-            # Build update fields
             update_fields = {}
             allowed_fields = ['name', 'location', 'status', 'battery', 'assigned_to', 'total_scans']
             
@@ -121,7 +126,6 @@ class DeviceManagementView(APIView):
                     status=status.HTTP_404_NOT_FOUND
                 )
             
-            # Get updated device
             updated_device = devices_collection.find_one({'_id': ObjectId(device_id)})
             updated_device['_id'] = str(updated_device['_id'])
             
@@ -139,6 +143,8 @@ class DeviceManagementView(APIView):
             )
         
     def delete(self, request, device_id=None):
+        if not verify_session(request):
+            return Response({"error": "User is not authenticated."}, status=status.HTTP_401_UNAUTHORIZED)
         try:
             if not device_id:
                 device_id = request.query_params.get('device_id')

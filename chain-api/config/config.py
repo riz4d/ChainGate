@@ -4,11 +4,11 @@ MONGODB = {
     "user": "riza",
     "password": "PUb2ZnDr3QHRgzuf",
     "connection_string": "mongodb+srv://riza:PUb2ZnDr3QHRgzuf@deffenderdb.egverpm.mongodb.net/?retryWrites=true&w=majority&appName=deffenderDb",
-    "database_name": "chaingate",
+    "database_name": "bises",
     "collections": {
         "users": "users",
         "cards": "cards",
-        "admins": "admins",
+        "admin": "admin",
         "accesslog": "accesslog",
         "access_levels": "access_levels",
         "alertconfig": "alertconfig",

@@ -2,29 +2,29 @@ from django.contrib.auth import logout
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny
 from datetime import datetime
 import json
 import traceback
 from bson import ObjectId
 from web3 import Web3
+from ...middleware.sessioncontroller import verify_session
 
 class ChainInfoView(APIView):
-
+    permission_classes = [AllowAny]
     def get(self, request, *args, **kwargs):
+        if not verify_session(request):
+            return Response({"error": "User is not authenticated."}, status=status.HTTP_401_UNAUTHORIZED)
         try:
-            # Connect to Ganache with timeout
             start_time = datetime.now()
             web3 = Web3(Web3.HTTPProvider("http://127.0.0.1:8545", request_kwargs={'timeout': 5}))
             
-            # Check connection
             if not web3.is_connected():
                 return Response({
                     "status": "error",
                     "message": "Failed to connect to the blockchain node"
                 }, status=status.HTTP_503_SERVICE_UNAVAILABLE)
             
-            # Calculate latency
             latency = (datetime.now() - start_time).total_seconds() * 1000  # in milliseconds
             
             chain_id = web3.eth.chain_id
@@ -58,21 +58,17 @@ class ChainInfoView(APIView):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class BlockchainTransactionsView(APIView):
-    """
-    API View for retrieving paginated blockchain transactions
-    """
-    #permission_classes = [IsAuthenticated]
-    
+
+    permission_classes = [AllowAny]    
     def get(self, request):
+        if not verify_session(request):
+            return Response({"error": "User is not authenticated."}, status=status.HTTP_401_UNAUTHORIZED)
         try:
-            # Get pagination parameters
             page = int(request.query_params.get('page', 1))
-            per_page = 5  # Fixed at 5 transactions per page
+            per_page = 5
             
-            # Connect to Ganache
             web3 = Web3(Web3.HTTPProvider("http://127.0.0.1:8545", request_kwargs={'timeout': 5}))
             
-            # Check connection
             if not web3.is_connected():
                 return Response({
                     "status": "error",
@@ -81,11 +77,9 @@ class BlockchainTransactionsView(APIView):
             
             latest_block = web3.eth.block_number
             
-            # Calculate total transactions across all blocks
             total_transactions = 0
             all_transactions = []
             
-            # Collect all transactions from latest blocks (going backwards)
             for i in range(latest_block, max(0, latest_block - 50), -1):  # Check last 50 blocks max
                 try:
                     block = web3.eth.get_block(i, full_transactions=True)
@@ -103,8 +97,7 @@ class BlockchainTransactionsView(APIView):
                         all_transactions.append(tx_data)
                         total_transactions += 1
                         
-                        # Stop if we have enough for pagination calculation
-                        if total_transactions >= 100:  # Reasonable limit
+                        if total_transactions >= 100:
                             break
                     
                     if total_transactions >= 100:
@@ -114,15 +107,12 @@ class BlockchainTransactionsView(APIView):
                     print(f"Error reading block {i}: {block_error}")
                     continue
             
-            # Calculate pagination
             total_pages = (total_transactions + per_page - 1) // per_page
             start_index = (page - 1) * per_page
             end_index = start_index + per_page
             
-            # Get transactions for current page
             page_transactions = all_transactions[start_index:end_index]
             
-            # Prepare pagination metadata
             pagination = {
                 "total_transactions": total_transactions,
                 "total_pages": total_pages,

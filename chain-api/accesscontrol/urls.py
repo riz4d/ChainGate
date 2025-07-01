@@ -9,6 +9,9 @@ from accesscontrol.controller.blockchain.chaininfo import ChainInfoView, Blockch
 from accesscontrol.controller.settings.setting import SettingsView
 from accesscontrol.controller.main.overiew import OverviewView
 from accesscontrol.controller.search.users import UserSearchView,UserSummarizeView
+from accesscontrol.authentication.login.access import AccessControlView
+from accesscontrol.authentication.tokens.refresh import RefreshTokenView
+from accesscontrol.authentication.logout.logout import LogoutView
 urlpatterns = [
     path('access/', pn532data.as_view(), name='nfc_data'),
     path('users/', UserListView.as_view(), name='user_list'),
@@ -29,5 +32,8 @@ urlpatterns = [
     path('search/<str:user_id>/', UserSearchView.as_view(), name='user_search_by_id'),
     path('summarize/', UserSummarizeView.as_view(), name='user_summarize_all'),
     path('summarize/<str:user_id>/', UserSummarizeView.as_view(), name='user_summarize'),
+    path('supervisor/access/', AccessControlView.as_view(), name='access_control'),
+    path('supervisor/refresh-token/', RefreshTokenView.as_view(), name='refresh_token'),
+    path('supervisor/logout/', LogoutView.as_view(), name='logout'),
     
 ]

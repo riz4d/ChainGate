@@ -60,12 +60,17 @@ export default function SettingsPage() {
   const fetchSettings = async () => {
     try {
       setIsLoading(true)
-      const response = await fetch(`${API_BASE_URL}/api/settings/`)
-      
+      const response = await fetch(`${API_BASE_URL}/api/settings/`, {
+        credentials: "include",
+      })
+      if (response.status === 401) {
+        window.location.href = "/login"
+        return Promise.reject('Unauthorized')
+      }
       if (!response.ok) {
         throw new Error(`Failed to fetch settings: ${response.statusText}`)
       }
-      
+
       const data: SettingsApiResponse = await response.json()
       
       setSettings(prev => ({
@@ -108,12 +113,18 @@ export default function SettingsPage() {
       
       const response = await fetch(`${API_BASE_URL}/api/settings/`, {
         method: 'PUT',
+        credentials: "include",
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(payload)
       })
-      
+
+      if (response.status === 401) {
+        window.location.href = "/login"
+        return Promise.reject('Unauthorized')
+      }
+
       if (!response.ok) {
         throw new Error(`Failed to save settings: ${response.statusText}`)
       }

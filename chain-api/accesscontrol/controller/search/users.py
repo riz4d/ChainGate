@@ -2,17 +2,20 @@ from django.contrib.auth import logout
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny
 from ...connections.mongodb.dbconnect import users_collection
 from datetime import datetime
 import json
 import traceback
 from bson import ObjectId
 from ...controller.models.engine import summarize
+from ...middleware.sessioncontroller import verify_session
 
 class UserSearchView(APIView):
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     def get(self, request, user_id):
+        if not verify_session(request):
+            return Response({"error": "User is not authenticated."}, status=status.HTTP_401_UNAUTHORIZED)
         try:
             start_time = datetime.now()
             print(f"Searching user by ID: {user_id}")

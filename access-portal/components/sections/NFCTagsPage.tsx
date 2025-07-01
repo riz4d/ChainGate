@@ -126,7 +126,13 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
 
 const fetchAccessLevels = async (): Promise<AccessLevelsResponse> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/access-levels/`)
+    const response = await fetch(`${API_BASE_URL}/api/access-levels/`, {
+      credentials: "include",
+    })
+    if (response.status === 401) {
+      window.location.href = "/login"
+      return Promise.reject('Unauthorized')
+    }
     if (!response.ok) {
       throw new Error(`Failed to fetch access levels: ${response.statusText}`)
     }
@@ -139,7 +145,13 @@ const fetchAccessLevels = async (): Promise<AccessLevelsResponse> => {
 
 const fetchDevices = async (): Promise<DeviceListResponse> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/devices/`)
+    const response = await fetch(`${API_BASE_URL}/api/devices/`, {
+      credentials: "include",
+    })
+    if (response.status === 401) {
+      window.location.href = "/login"
+      return Promise.reject('Unauthorized')
+    }
     if (!response.ok) {
       throw new Error(`Failed to fetch devices: ${response.statusText}`)
     }
@@ -161,11 +173,16 @@ const createDevice = async (deviceData: {
     const response = await fetch(`${API_BASE_URL}/api/devices/`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      credentials: "include",
       body: JSON.stringify({
         ...deviceData,
         total_scans: 0
       })
     })
+    if (response.status === 401) {
+      window.location.href = "/login"
+      return Promise.reject('Unauthorized')
+    }
     
     const data = await response.json()
     
@@ -185,9 +202,13 @@ const updateDevice = async (deviceId: string, deviceData: Partial<NFCTag>): Prom
     const response = await fetch(`${API_BASE_URL}/api/devices/${deviceId}/`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
+      credentials: "include",
       body: JSON.stringify(deviceData)
     })
-    
+    if (response.status === 401) {
+      window.location.href = "/login"
+      return Promise.reject('Unauthorized')
+    }
     if (!response.ok) {
       const data = await response.json()
       throw new Error(data.error || `Failed to update device: ${response.statusText}`)
@@ -203,9 +224,15 @@ const updateDevice = async (deviceId: string, deviceData: Partial<NFCTag>): Prom
 const deleteDevice = async (deviceId: string): Promise<void> => {
   try {
     const response = await fetch(`${API_BASE_URL}/api/devices/${deviceId}/`, { 
-      method: 'DELETE' 
+      method: 'DELETE',
+      credentials: "include"
     })
-    
+
+    if (response.status === 401) {
+      window.location.href = "/login"
+      return Promise.reject('Unauthorized')
+    }
+
     if (!response.ok) {
       const data = await response.json()
       throw new Error(data.error || `Failed to delete device: ${response.statusText}`)

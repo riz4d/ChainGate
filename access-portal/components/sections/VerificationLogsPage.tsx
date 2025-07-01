@@ -85,7 +85,13 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
 
 const fetchLogs = async (): Promise<LogsResponse> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/logs/`)
+    const response = await fetch(`${API_BASE_URL}/api/logs/`, {
+      credentials: "include",
+    })
+    if (response.status === 401) {
+      window.location.href = "/login"
+      return Promise.reject('Unauthorized')
+    }
     if (!response.ok) {
       throw new Error(`Failed to fetch logs: ${response.statusText}`)
     }

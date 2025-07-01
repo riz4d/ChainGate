@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -10,6 +10,8 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Shield, Eye, EyeOff, Lock, Mail, Fingerprint, Wifi, CheckCircle } from "lucide-react"
 import { useRouter } from "next/navigation"
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+
 export default function LoginPage() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -18,7 +20,45 @@ export default function LoginPage() {
   const [error, setError] = useState("")
   const [showLoginForm, setShowLoginForm] = useState(false)
   const [isTransitioning, setIsTransitioning] = useState(false)
+  const [typewriterText, setTypewriterText] = useState("")
+  const [showCursor, setShowCursor] = useState(true)
   const router = useRouter()
+
+  const fullText = "Do you really want to sign in?"
+
+  // // Check if user is already logged in
+  // useEffect(() => {
+  //   const adminData = sessionStorage.getItem('admin')
+  //   if (adminData) {
+  //     router.push('/')
+  //   }
+  // }, [router])
+
+  // Typewriter effect
+  useEffect(() => {
+    if (!showLoginForm) {
+      let currentIndex = 0
+      const typewriterInterval = setInterval(() => {
+        if (currentIndex <= fullText.length) {
+          setTypewriterText(fullText.slice(0, currentIndex))
+          currentIndex++
+        } else {
+          clearInterval(typewriterInterval)
+        }
+      }, 100) // Adjust speed here (lower = faster)
+
+      return () => clearInterval(typewriterInterval)
+    }
+  }, [showLoginForm])
+
+  // Blinking cursor effect
+  useEffect(() => {
+    const cursorInterval = setInterval(() => {
+      setShowCursor(prev => !prev)
+    }, 500)
+
+    return () => clearInterval(cursorInterval)
+  }, [])
 
   const handleShowLoginForm = async () => {
     setIsTransitioning(true)
@@ -34,29 +74,55 @@ export default function LoginPage() {
     setError("")
 
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500))
-      
-      // For demo purposes - in real app, validate credentials with API
-      if (email && password) {
-        router.push("/")
-      } else {
-        setError("Please enter valid credentials")
+      // Validate inputs
+      if (!email || !password) {
+        throw new Error("Please enter both email and password")
       }
-    } catch (err) {
-      setError("Login failed. Please try again.")
+
+      // Call login API
+      const response = await fetch(`${API_BASE_URL}/api/supervisor/access/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include', // Important: Include cookies for session management
+        body: JSON.stringify({ email, password })
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Login failed')
+      }
+
+      // Store admin info in sessionStorage (session is managed by backend cookies)
+      sessionStorage.setItem('admin', JSON.stringify({
+        id: data.admin_id,
+        name: data.name,
+        email: data.email
+      }))
+      
+      console.log('Login successful:', {
+        admin_id: data.admin_id,
+        email: data.email,
+        name: data.name
+      })
+      
+      // Redirect to dashboard
+      router.push("/")
+      
+    } catch (err: any) {
+      setError(err.message || "Login failed. Please try again.")
     } finally {
       setIsLoading(false)
     }
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 flex items-center justify-center p-4">
-      {/* Background Pattern */}
+    <div className="min-h-screen font-exo bg-gradient-to-br from-blue-50 via-white to-indigo-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] -z-10" />
       
       <div className="w-full max-w-md space-y-6">
-        {/* Logo and Header */}
         <div className="text-center space-y-4">
           <div className="flex justify-center">
             <div className="p-3 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl shadow-lg">
@@ -64,12 +130,10 @@ export default function LoginPage() {
             </div>
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">ChainGate Access Control</h1>
+            <h1 className="text-lg md:text-2xl  text-gray-900 font-russone">ChainGate Access Control</h1>
             <p className="text-gray-600 text-sm mt-1">Secure Authentication Portal</p>
           </div>
         </div>
-
-        {/* Status Indicators */}
         <div className="flex justify-center gap-4">
           <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
             <Wifi className="h-3 w-3 mr-1" />
@@ -81,73 +145,43 @@ export default function LoginPage() {
           </Badge>
         </div>
 
-        {/* Login Form */}
         <div className="relative">
           {!showLoginForm && !isTransitioning ? (
-            // Initial Login Options with animation
             <div className="animate-in fade-in duration-500">
               <div className="transform transition-all duration-300">
-                <div className="space-y-6 p-6">
-                  {/* Authentication Options */}
-                  <div className="space-y-4">
-                    <div className="text-center">
-                      <p className="text-sm font-medium text-gray-700 mb-4">Choose Authentication Method</p>
+                <div className="space-y-6 p-6 text-center">
+                  <div className="space-y-6">
+                    <div className="min-h-[2rem] flex items-center justify-center">
+                      <h2 className="text-base font-medium font-exo text-gray-800 ">
+                        {typewriterText}
+                        <span className={`inline-block w-0.5 h-4 bg-blue-500 ml-1 ${showCursor ? 'opacity-100' : 'opacity-0'} transition-opacity duration-100`}></span>
+                      </h2>
                     </div>
                     
-                    {/* Email Login Button */}
-                    <Button
-                      onClick={handleShowLoginForm}
-                      disabled={isTransitioning}
-                      className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-medium py-4 rounded-lg shadow-md transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg"
-                    >
-                      {isTransitioning ? (
-                        <div className="flex items-center gap-2">
-                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                          Loading...
-                        </div>
-                      ) : (
-                        <div className="flex items-center gap-2">
-                          <Mail className="h-4 w-4" />
-                          Sign In with Email
-                        </div>
-                      )}
-                    </Button>
-
-                    {/* Divider */}
-                    <div className="relative">
-                      <div className="absolute inset-0 flex items-center">
-                        <span className="w-full border-t border-gray-200" />
-                      </div>
-                      <div className="relative flex justify-center text-xs uppercase">
-                        <span className="bg-white px-3 text-gray-500 font-medium">Alternative Methods</span>
-                      </div>
-                    </div>
-
-                    {/* NFC Login Option */}
-                    <Button
-                      variant="outline"
-                      className="w-full border-gray-200 hover:bg-gray-50 rounded-lg py-4 transition-all duration-200 hover:border-gray-300"
-                      disabled
-                    >
-                      <Fingerprint className="h-4 w-4 mr-2 text-gray-400" />
-                      <span className="text-gray-400">NFC Badge Authentication</span>
-                      <Badge variant="outline" className="ml-2 text-xs bg-orange-50 text-orange-600 border-orange-200">
-                        Coming Soon
-                      </Badge>
-                    </Button>
-                    
-                    {/* Admin Access Note */}
-                    <div className="text-center pt-2">
-                      <p className="text-xs text-gray-500">
-                        For administrator access, contact your system administrator
-                      </p>
+                    <div className={`transition-all duration-500 ${typewriterText === fullText ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+                      <Button
+                        onClick={handleShowLoginForm}
+                        disabled={isTransitioning || typewriterText !== fullText}
+                        className="w-full max-w-40 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-medium py-4 rounded-lg shadow-md transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                      >
+                        {isTransitioning ? (
+                          <div className="flex items-center gap-2">
+                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                            Loading...
+                          </div>
+                        ) : (
+                          <div className="flex items-center gap-2 justify-center">
+                            <Shield className="h-4 w-4" />
+                            Yes, Sign In
+                          </div>
+                        )}
+                      </Button>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           ) : isTransitioning ? (
-            // Loading transition
             <div className="animate-in fade-in duration-300">
               <Card className="shadow-xl bg-white/80 backdrop-blur-sm">
                 <CardContent className="p-12">
@@ -159,7 +193,6 @@ export default function LoginPage() {
               </Card>
             </div>
           ) : (
-            // Login Form with animation
             <div className="animate-in slide-in-from-right duration-500">
               <Card className="shadow-xl bg-white/80 backdrop-blur-sm">
                 <CardHeader className="space-y-2 pb-4">
@@ -191,7 +224,6 @@ export default function LoginPage() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <form onSubmit={handleLogin} className="space-y-4">
-                    {/* Email Field */}
                     <div className="space-y-2">
                       <Label htmlFor="email" className="text-sm font-medium text-gray-700">
                         Email Address
@@ -201,7 +233,7 @@ export default function LoginPage() {
                         <Input
                           id="email"
                           type="email"
-                          placeholder="admin@chaingate.com"
+                          placeholder="admin@chaingate.corp"
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
                           className="pl-10 bg-gray-50/50 border-gray-200 focus:border-blue-400 focus:ring-blue-400 rounded-lg transition-all duration-200"
@@ -210,7 +242,6 @@ export default function LoginPage() {
                       </div>
                     </div>
 
-                    {/* Password Field */}
                     <div className="space-y-2">
                       <Label htmlFor="password" className="text-sm font-medium text-gray-700">
                         Password
@@ -242,7 +273,6 @@ export default function LoginPage() {
                       </div>
                     </div>
 
-                    {/* Error Message */}
                     {error && (
                       <div className="animate-in slide-in-from-top duration-300">
                         <Alert className="bg-red-50 border-red-200">
@@ -253,7 +283,6 @@ export default function LoginPage() {
                       </div>
                     )}
 
-                    {/* Login Button */}
                     <Button
                       type="submit"
                       className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-medium py-3 rounded-lg shadow-md transition-all duration-300 transform hover:scale-[1.02]"
@@ -278,7 +307,6 @@ export default function LoginPage() {
           )}
         </div>
 
-        {/* Footer */}
         <div className="text-center space-y-2">
           <p className="text-xs text-gray-500">
             Secured by authentication technology
