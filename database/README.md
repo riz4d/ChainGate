@@ -4,7 +4,7 @@
 
 This directory contains a MongoDB database backup for the ChainGate access control system. The backup was created using `mongodump` and contains all collections from the production database.
 
-### Backup Details
+#### Backup Details
 
 - **Database Name**: `chaingate`
 - **Backup Format**: MongoDB BSON + Metadata JSON
@@ -14,7 +14,7 @@ This directory contains a MongoDB database backup for the ChainGate access contr
 
 ## Collections Overview
 
-### Core Collections Included
+#### Core Collections Included
 
 | Collection        | Purpose           | Contains                              |
 | ----------------- | ----------------- | ------------------------------------- |
@@ -26,9 +26,6 @@ This directory contains a MongoDB database backup for the ChainGate access contr
 | `settings`      | System Config     | Application configuration settings    |
 | `alertconfig`   | Alert System      | Notification and alert configurations |
 
-### Missing Collections (Expected)
-
-- `cards` - NFC card/tag associations (not present in this backup)
 
 ## File Structure
 
@@ -52,7 +49,7 @@ database/chaingate/
 
 ## Database Schema Analysis
 
-### Index Information
+#### Index Information
 
 All collections have the standard MongoDB ObjectId index:
 
@@ -60,7 +57,7 @@ All collections have the standard MongoDB ObjectId index:
 - **Index Name**: `_id_`
 - **Version**: 2 (modern MongoDB format)
 
-### Collection UUIDs
+#### Collection UUIDs
 
 Each collection has a unique identifier for tracking:
 
@@ -74,7 +71,7 @@ Each collection has a unique identifier for tracking:
 
 ## Expected Data Structure
 
-### Users Collection
+#### Users Collection
 
 Likely contains:
 
@@ -83,7 +80,7 @@ Likely contains:
 - Access level assignments
 - Account status and timestamps
 
-### Admin Collection
+#### Admin Collection
 
 Administrative accounts with:
 
@@ -92,7 +89,7 @@ Administrative accounts with:
 - Session management data
 - Last login information
 
-### Access Log Collection
+#### Access Log Collection
 
 Access attempt records:
 
@@ -101,7 +98,7 @@ Access attempt records:
 - Verification results
 - Timestamp and location data
 
-### Devices Collection
+#### Devices Collection
 
 Physical hardware information:
 
@@ -110,7 +107,7 @@ Physical hardware information:
 - Device status and health
 - Network configuration
 
-### Access Levels Collection
+#### Access Levels Collection
 
 Permission definitions:
 
@@ -119,7 +116,7 @@ Permission definitions:
 - Time-based restrictions
 - Special privileges
 
-### Settings Collection
+#### Settings Collection
 
 System configuration:
 
@@ -128,7 +125,7 @@ System configuration:
 - Feature toggles
 - Integration configs
 
-### Alert Config Collection
+#### Alert Config Collection
 
 Notification system:
 
@@ -139,13 +136,13 @@ Notification system:
 
 ## Restore Instructions
 
-### Prerequisites
+#### Prerequisites
 
 - MongoDB installed (version 7.0+ recommended)
 - `mongorestore` utility available
 - Access to target MongoDB instance
 
-### Basic Restore Command
+#### Basic Restore Command
 
 ```bash
 # Restore to local MongoDB instance
@@ -158,7 +155,7 @@ mongorestore --uri "mongodb+srv://user:pass@cluster.mongodb.net/" --db chaingate
 mongorestore --db chaingate_restored /path/to/database/chaingate/
 ```
 
-### Advanced Restore Options
+#### Advanced Restore Options
 
 ```bash
 # Restore specific collection only
@@ -173,7 +170,7 @@ mongorestore --db chaingate --noOverwrite /path/to/database/chaingate/
 
 ## Data Analysis Commands
 
-### Quick Data Inspection
+#### Quick Data Inspection
 
 ```bash
 # Count documents in each collection
@@ -190,7 +187,7 @@ mongo chaingate --eval "db.stats()"
 mongo chaingate --eval "db.users.findOne()"
 ```
 
-### Validation Commands
+#### Validation Commands
 
 ```bash
 # Validate collection integrity
@@ -205,7 +202,7 @@ mongo chaingate --eval "db.runCommand({dbStats: 1})"
 
 ## Backup Information
 
-### Creating New Backups
+#### Creating New Backups
 
 ```bash
 # Create full database backup
@@ -218,14 +215,14 @@ mongodump --uri "mongodb+srv://..." --db chaingate --gzip --out backup/
 mongodump --uri "mongodb+srv://..." --db chaingate --collection users --out backup/
 ```
 
-### Backup Best Practices
+#### Backup Best Practices
 
 - **Frequency**: Daily automated backups recommended
 - **Retention**: Keep 30 days of backups minimum
 - **Testing**: Regularly test restore procedures
 - **Monitoring**: Verify backup completion and integrity
 
-### Troubleshooting
+#### Troubleshooting
 
 - Check MongoDB logs for restore issues
 - Verify network connectivity for Atlas restores
@@ -234,7 +231,7 @@ mongodump --uri "mongodb+srv://..." --db chaingate --collection users --out back
 
 ## Support Information
 
-### Documentation References
+#### Documentation References
 
 - [MongoDB Restore Documentation](https://docs.mongodb.com/database-tools/mongorestore/)
 - [ChainGate API Documentation](../chain-api/README.md)
