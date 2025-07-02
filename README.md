@@ -7,7 +7,7 @@
 [![Next.js](https://img.shields.io/badge/Next.js-15.2.4-black.svg)](https://nextjs.org)
 [![Django](https://img.shields.io/badge/Django-5.2.1-green.svg)](https://djangoproject.com)
 [![Arduino](https://img.shields.io/badge/Arduino-ESP32-orange.svg)](https://arduino.cc)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 
 </div>
 
@@ -92,4 +92,4 @@ This project was developed as part of a research initiative to explore the integ
 
 - The open-source community for the libraries and frameworks that made this project possible
 
-ChainGate is released under the MIT License. We welcome contributions, feedback, and suggestions from the community.
+ChainGate is released under the Apache 2.0 License. We welcome contributions, feedback, and suggestions from the community.
