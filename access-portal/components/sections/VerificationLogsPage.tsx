@@ -284,7 +284,7 @@ export function VerificationLogsPage() {
             Verification Logs
           </h1>
           <p className="text-muted-foreground text-sm italic">
-            Monitor and analyze all NFC verification attempts
+            Monitor and analyze all Gate verification attempts
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -400,7 +400,7 @@ export function VerificationLogsPage() {
                 <TableRow>
                   <TableHead>Timestamp</TableHead>
                   <TableHead>User</TableHead>
-                  <TableHead>NFC ID / Method</TableHead>
+                  <TableHead>GATE ID / Method</TableHead>
                   <TableHead>Location</TableHead>
                   <TableHead>Access Level</TableHead>
                   <TableHead>Status</TableHead>
@@ -534,7 +534,7 @@ export function VerificationLogsPage() {
                       <div className="font-medium">{selectedLog.access_time.date} {selectedLog.access_time.time}</div>
                     </div>
                     <div>
-                      <span className="text-sm text-muted-foreground">NFC ID:</span>
+                      <span className="text-sm text-muted-foreground">GATE ID:</span>
                       <div className="font-mono">{selectedLog.nfc_id}</div>
                     </div>
                     <div>

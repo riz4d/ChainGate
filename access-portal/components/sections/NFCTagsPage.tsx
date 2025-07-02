@@ -492,7 +492,7 @@ export function NFCTagsPage() {
     if (tags.some(tag => tag.tag_id && tag.tag_id === tagId)) {
       toast({
         title: "Error",
-        description: "A tag with this ID already exists. Please use a different ID.",
+        description: "A Gate with this ID already exists. Please use a different ID.",
         variant: "destructive"
       })
       return
@@ -516,13 +516,13 @@ export function NFCTagsPage() {
       
       toast({
         title: "Success",
-        description: `NFC Tag "${formData.name}" has been created successfully.`
+        description: `Gate "${formData.name}" has been created successfully.`
       })
     } catch (error) {
-      console.error('Error creating tag:', error)
+      console.error('Error creating Gate:', error)
       toast({
         title: "Error",
-        description: error instanceof Error ? error.message : "Failed to create tag. Please try again.",
+        description: error instanceof Error ? error.message : "Failed to create Gate. Please try again.",
         variant: "destructive"
       })
     } finally {
@@ -568,7 +568,7 @@ export function NFCTagsPage() {
                 ...updatedTag,  
                 _id: selectedTag._id 
               }
-              console.log('Updated tag (API response):', mergedTag)
+              console.log('Updated gate (API response):', mergedTag)
               return mergedTag
             } else {
               const fallbackTag = {
@@ -579,14 +579,14 @@ export function NFCTagsPage() {
                 assigned_to: formData.assigned_to,
                 updated_at: new Date().toISOString()
               }
-              console.log('Updated tag (fallback):', fallbackTag)
+              console.log('Updated Gate (fallback):', fallbackTag)
               return fallbackTag
             }
           }
           return tag
         })
-        
-        console.log('All tags after update:', updatedTags)
+
+        console.log('All Gates after update:', updatedTags)
         return updatedTags
       })
 
@@ -606,13 +606,13 @@ export function NFCTagsPage() {
       
       toast({
         title: "Success",
-        description: `NFC Tag "${formData.name}" has been updated successfully.`
+        description: `Gate "${formData.name}" has been updated successfully.`
       })
     } catch (error) {
-      console.error('Error updating tag:', error)
+      console.error('Error updating gate:', error)
       toast({
         title: "Error",
-        description: error instanceof Error ? error.message : "Failed to update tag. Please try again.",
+        description: error instanceof Error ? error.message : "Failed to update gate. Please try again.",
         variant: "destructive"
       })
     } finally {
@@ -630,13 +630,13 @@ export function NFCTagsPage() {
       
       toast({
         title: "Success",
-        description: `NFC Tag "${tagToDelete.name}" has been deleted successfully.`
+        description: `Gate "${tagToDelete.name}" has been deleted successfully.`
       })
     } catch (error) {
-      console.error('Error deleting tag:', error)
+      console.error('Error deleting gate:', error)
       toast({
         title: "Error",
-        description: error instanceof Error ? error.message : "Failed to delete tag. Please try again.",
+        description: error instanceof Error ? error.message : "Failed to delete gate. Please try again.",
         variant: "destructive"
       })
     }
@@ -761,14 +761,14 @@ export function NFCTagsPage() {
             <DialogTrigger asChild>
               <Button className="gap-2 bg-gradient-to-r from-blue-600 to-indigo-600">
                 <Plus className="h-4 w-4" />
-                Add New Tag
+                Add New Gate
               </Button>
             </DialogTrigger>
             <DialogContent className="max-w-2xl">
               <DialogHeader>
-                <DialogTitle>Add New NFC Tag</DialogTitle>
+                <DialogTitle>Add New Gate</DialogTitle>
                 <DialogDescription>
-                  Create a new NFC tag to be deployed in your system.
+                  Create a new gate to be deployed in your system.
                 </DialogDescription>
               </DialogHeader>
               <div className="space-y-4">
@@ -786,7 +786,7 @@ export function NFCTagsPage() {
                     <Label htmlFor="tag-name">Tag Name *</Label>
                     <Input 
                       id="tag-name" 
-                      placeholder="Enter tag name" 
+                      placeholder="Enter gate name" 
                       value={formData.name}
                       onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
                     />
@@ -835,7 +835,7 @@ export function NFCTagsPage() {
                     Cancel
                   </Button>
                   <Button onClick={handleAddTag} disabled={isSubmitting}>
-                    {isSubmitting ? "Creating..." : "Create Tag"}
+                    {isSubmitting ? "Creating..." : "Create Gate"}
                   </Button>
                 </div>
               </div>
@@ -847,9 +847,9 @@ export function NFCTagsPage() {
       <Dialog open={isEditTagOpen} onOpenChange={setIsEditTagOpen}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Edit NFC Tag</DialogTitle>
+            <DialogTitle>Edit Gate</DialogTitle>
             <DialogDescription>
-              Update the NFC tag information.
+              Update the gate information.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
@@ -917,7 +917,7 @@ export function NFCTagsPage() {
                 Cancel
               </Button>
               <Button onClick={handleUpdateTag} disabled={isSubmitting}>
-                {isSubmitting ? "Updating..." : "Update Tag"}
+                {isSubmitting ? "Updating..." : "Update Gate"}
               </Button>
             </div>
           </div>
@@ -927,7 +927,7 @@ export function NFCTagsPage() {
       <div className="grid gap-4 md:grid-cols-4">
         <Card className="border-l-4 border-l-blue-500">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">Total Tags</CardTitle>
+            <CardTitle className="text-sm font-medium text-gray-600">Total Gates</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.total}</div>
@@ -964,13 +964,13 @@ export function NFCTagsPage() {
           <div className="flex items-center justify-between">
             <CardTitle className="flex items-center gap-2">
               <NfcIcon className="h-5 w-5 text-blue-600" />
-              NFC Tags ({filteredTags.length})
+              Gates ({filteredTags.length})
             </CardTitle>
             <div className="flex items-center gap-3">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <Input
-                  placeholder="Search tags..."
+                  placeholder="Search gates..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-10 w-64"
@@ -1066,7 +1066,7 @@ export function NFCTagsPage() {
                         size="sm" 
                         className="h-8 w-8 p-0 hover:bg-blue-100"
                         onClick={() => handleEditTag(tag)}
-                        title="Edit tag"
+                        title="Edit gate"
                       >
                         <Edit className="h-4 w-4" />
                       </Button>
@@ -1076,7 +1076,7 @@ export function NFCTagsPage() {
                             variant="ghost" 
                             size="sm" 
                             className="h-8 w-8 p-0 text-red-600 hover:bg-red-100"
-                            title="Delete tag"
+                            title="Delete gate"
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>
@@ -1085,7 +1085,7 @@ export function NFCTagsPage() {
                           <AlertDialogHeader>
                             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                             <AlertDialogDescription>
-                              This action cannot be undone. This will permanently delete the NFC tag "{tag.name}" and remove all associated data.
+                              This action cannot be undone. This will permanently delete the gate "{tag.name}" and remove all associated data.
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>

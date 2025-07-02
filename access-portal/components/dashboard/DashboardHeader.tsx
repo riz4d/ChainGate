@@ -27,7 +27,7 @@ import { useRouter } from "next/navigation"
 import { useState, useEffect } from "react"
 import { useAuth } from "@/hooks/use-auth"
 import { toast } from "@/hooks/use-toast"
-
+import Image from "next/image"
 const navigationItems = [
   { title: "Dashboard", section: "dashboard" as const, icon: Home },
   { title: "NFC Tags", section: "nfc-tags" as const, icon: NfcIcon },
@@ -103,13 +103,15 @@ export function DashboardHeader() {
   return (
     <header className="flex h-16 shrink-0 items-center gap-4 px-4 w-full border-b border-blue-100 bg-white/95 backdrop-blur-sm">
       <div className="flex items-center gap-3">
-        <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-indigo-600 text-white shadow-md">
-          <Zap className="size-4" />
-        </div>
-        <div className="hidden sm:block">
-          <span className="font-bold text-lg bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-            ChainGate
-          </span>
+        <div className="flex aspect-square size-12 items-center justify-center rounded-lg text-white shadow-md bg-transparent">
+          {/* <Zap className="size-4" /> */}
+          <Image 
+            src="/logo.png" 
+            alt="ChainGate Logo" 
+            width={48} 
+            height={48} 
+            className=""
+          />
         </div>
       </div>
 
