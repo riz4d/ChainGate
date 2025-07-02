@@ -1,0 +1,671 @@
+{
+  "info": {
+    "name": "ChainGate API Collection",
+    "description": "Complete API collection for ChainGate access control system with blockchain integration",
+    "version": "1.0.0",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "type": "string"
+    },
+    {
+      "key": "api_base",
+      "value": "{{base_url}}/api",
+      "type": "string"
+    }
+  ],
+  "auth": {
+    "type": "noauth"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Admin Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@chaingate.com\",\n  \"password\": \"admin123\"\n}"
+            },
+            "url": {
+              "raw": "{{api_base}}/supervisor/access/",
+              "host": ["{{api_base}}"],
+              "path": ["supervisor", "access", ""]
+            },
+            "description": "Login endpoint for administrators"
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refresh_token\": \"your_refresh_token_here\"\n}"
+            },
+            "url": {
+              "raw": "{{api_base}}/supervisor/refresh-token/",
+              "host": ["{{api_base}}"],
+              "path": ["supervisor", "refresh-token", ""]
+            },
+            "description": "Refresh authentication token"
+          },
+          "response": []
+        },
+        {
+          "name": "Admin Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{api_base}}/supervisor/logout/",
+              "host": ["{{api_base}}"],
+              "path": ["supervisor", "logout", ""]
+            },
+            "description": "Logout endpoint for administrators"
+          },
+          "response": []
+        }
+      ],
+      "description": "Authentication related endpoints"
+    },
+    {
+      "name": "Access Control",
+      "item": [
+        {
+          "name": "NFC Access Check",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"uidHex\": \"04:5B:8C:A2\",\n  \"uidLength\": 4,\n  \"gateId\": \"GATE001\"\n}"
+            },
+            "url": {
+              "raw": "{{api_base}}/access/",
+              "host": ["{{api_base}}"],
+              "path": ["access", ""]
+            },
+            "description": "Process NFC card data for access control"
+          },
+          "response": []
+        }
+      ],
+      "description": "Core access control functionality"
+    },
+    {
+      "name": "User Management",
+      "item": [
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{api_base}}/users/?page=1&per_page=10&sort_by=name&sort_order=asc",
+              "host": ["{{api_base}}"],
+              "path": ["users", ""],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "per_page",
+                  "value": "10"
+                },
+                {
+                  "key": "sort_by",
+                  "value": "name"
+                },
+                {
+                  "key": "sort_order",
+                  "value": "asc"
+                }
+              ]
+            },
+            "description": "Retrieve paginated list of users with sorting and filtering"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Users with Filters",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{api_base}}/users/?name=riza&active=true&access_level=admin",
+              "host": ["{{api_base}}"],
+              "path": ["users", ""],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "riza"
+                },
+                {
+                  "key": "active",
+                  "value": "true"
+                },
+                {
+                  "key": "access_level",
+                  "value": "admin"
+                }
+              ]
+            },
+            "description": "Get users with name, active status, and access level filters"
+          },
+          "response": []
+        },
+        {
+          "name": "Create New User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Riza\",\n  \"email\": \"riza@example.com\",\n  \"nfc_id\": \"1234567890\",\n  \"access_level\": \"Admin\",\n  \"active\": true,\n  \"position\": \"Security Engineer\"\n}"
+            },
+            "url": {
+              "raw": "{{api_base}}/users/",
+              "host": ["{{api_base}}"],
+              "path": ["users", ""]
+            },
+            "description": "Create a new user in the system"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{api_base}}/users/user_id_here/",
+              "host": ["{{api_base}}"],
+              "path": ["users", "user_id_here", ""]
+            },
+            "description": "Delete a user by ID"
+          },
+          "response": []
+        }
+      ],
+      "description": "User management endpoints"
+    },
+    {
+      "name": "Access Logs",
+      "item": [
+        {
+          "name": "Get Access Logs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{api_base}}/logs/?page=1&per_page=5",
+              "host": ["{{api_base}}"],
+              "path": ["logs", ""],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "per_page",
+                  "value": "5"
+                }
+              ]
+            },
+            "description": "Retrieve paginated access logs"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Access Logs with Filters",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{api_base}}/logs/?status=granted&user_id=user123&start_date=2025-01-01&end_date=2025-12-31",
+              "host": ["{{api_base}}"],
+              "path": ["logs", ""],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "granted"
+                },
+                {
+                  "key": "user_id",
+                  "value": "user123"
+                },
+                {
+                  "key": "start_date",
+                  "value": "2025-01-01"
+                },
+                {
+                  "key": "end_date",
+                  "value": "2025-12-31"
+                }
+              ]
+            },
+            "description": "Get access logs filtered by status, user, and date range"
+          },
+          "response": []
+        }
+      ],
+      "description": "Access logging and audit trail"
+    },
+    {
+      "name": "Device Management",
+      "item": [
+        {
+          "name": "Get All Devices",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{api_base}}/devices/",
+              "host": ["{{api_base}}"],
+              "path": ["devices", ""]
+            },
+            "description": "Retrieve all registered devices"
+          },
+          "response": []
+        },
+        {
+          "name": "Create New Device",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tag_id\": \"GATE001\",\n  \"name\": \"Main Entrance Gate\",\n  \"location\": \"Building A - Front Door\",\n  \"status\": \"Active\",\n  \"total_scans\": 0,\n  \"assigned_to\": [\"admin\", \"employee\"]\n}"
+            },
+            "url": {
+              "raw": "{{api_base}}/devices/",
+              "host": ["{{api_base}}"],
+              "path": ["devices", ""]
+            },
+            "description": "Register a new access control device"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Device",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Device Name\",\n  \"location\": \"New Location\",\n  \"status\": \"Inactive\",\n  \"assigned_to\": [\"admin\"]\n}"
+            },
+            "url": {
+              "raw": "{{api_base}}/devices/device_id_here/",
+              "host": ["{{api_base}}"],
+              "path": ["devices", "device_id_here", ""]
+            },
+            "description": "Update device information"
+          },
+          "response": []
+        }
+      ],
+      "description": "Device management and configuration"
+    },
+    {
+      "name": "Access Levels",
+      "item": [
+        {
+          "name": "Get All Access Levels",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{api_base}}/access-levels/",
+              "host": ["{{api_base}}"],
+              "path": ["access-levels", ""]
+            },
+            "description": "Retrieve all access levels"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Access Level by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{api_base}}/access-levels/level_id_here/",
+              "host": ["{{api_base}}"],
+              "path": ["access-levels", "level_id_here", ""]
+            },
+            "description": "Get specific access level details"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Access Level",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Manager\",\n  \"description\": \"Management level access\",\n  \"permissions\": [\"read\", \"write\", \"manage_users\"]\n}"
+            },
+            "url": {
+              "raw": "{{api_base}}/access-levels/",
+              "host": ["{{api_base}}"],
+              "path": ["access-levels", ""]
+            },
+            "description": "Create a new access level"
+          },
+          "response": []
+        }
+      ],
+      "description": "Access level management"
+    },
+    {
+      "name": "Alert Configuration",
+      "item": [
+        {
+          "name": "Get Alert Config",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{api_base}}/alert-config/",
+              "host": ["{{api_base}}"],
+              "path": ["alert-config", ""]
+            },
+            "description": "Retrieve alert configuration settings"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Alert Config",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email_alerts\": true,\n  \"sms_alerts\": false,\n  \"alert_threshold\": 5,\n  \"notification_emails\": [\"admin@company.com\", \"security@company.com\"]\n}"
+            },
+            "url": {
+              "raw": "{{api_base}}/alert-config/config_id_here/",
+              "host": ["{{api_base}}"],
+              "path": ["alert-config", "config_id_here", ""]
+            },
+            "description": "Update alert configuration"
+          },
+          "response": []
+        }
+      ],
+      "description": "Alert and notification configuration"
+    },
+    {
+      "name": "Blockchain",
+      "item": [
+        {
+          "name": "Get Chain Info",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{api_base}}/blockchain/chain-info/",
+              "host": ["{{api_base}}"],
+              "path": ["blockchain", "chain-info", ""]
+            },
+            "description": "Get blockchain connection status and information"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Blockchain Transactions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{api_base}}/blockchain/transactions/?page=1",
+              "host": ["{{api_base}}"],
+              "path": ["blockchain", "transactions", ""],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Retrieve blockchain transactions with pagination"
+          },
+          "response": []
+        }
+      ],
+      "description": "Blockchain integration endpoints"
+    },
+    {
+      "name": "Settings",
+      "item": [
+        {
+          "name": "Get Settings",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{api_base}}/settings/",
+              "host": ["{{api_base}}"],
+              "path": ["settings", ""]
+            },
+            "description": "Retrieve system settings configuration"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Settings",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"system_name\": \"ChainGate Access Control\",\n  \"timezone\": \"UTC\",\n  \"session_timeout\": 3600,\n  \"max_failed_attempts\": 3,\n  \"lockout_duration\": 900\n}"
+            },
+            "url": {
+              "raw": "{{api_base}}/settings/",
+              "host": ["{{api_base}}"],
+              "path": ["settings", ""]
+            },
+            "description": "Update system settings"
+          },
+          "response": []
+        }
+      ],
+      "description": "System settings and configuration"
+    },
+    {
+      "name": "Dashboard & Analytics",
+      "item": [
+        {
+          "name": "Get Overview Dashboard",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{api_base}}/overview/",
+              "host": ["{{api_base}}"],
+              "path": ["overview", ""]
+            },
+            "description": "Get dashboard overview with system statistics"
+          },
+          "response": []
+        }
+      ],
+      "description": "Dashboard and analytics endpoints"
+    },
+    {
+      "name": "Search & Reporting",
+      "item": [
+        {
+          "name": "Search Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{api_base}}/search/?query=riza",
+              "host": ["{{api_base}}"],
+              "path": ["search", ""],
+              "query": [
+                {
+                  "key": "query",
+                  "value": "riza"
+                }
+              ]
+            },
+            "description": "Search for users by name or other criteria"
+          },
+          "response": []
+        },
+        {
+          "name": "Search User by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{api_base}}/search/user_id_here/",
+              "host": ["{{api_base}}"],
+              "path": ["search", "user_id_here", ""]
+            },
+            "description": "Search for specific user by ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Get User Summary (All)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{api_base}}/summarize/",
+              "host": ["{{api_base}}"],
+              "path": ["summarize", ""]
+            },
+            "description": "Get summary statistics for all users"
+          },
+          "response": []
+        },
+        {
+          "name": "Get User Summary (Specific)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{api_base}}/summarize/user_id_here/",
+              "host": ["{{api_base}}"],
+              "path": ["summarize", "user_id_here", ""]
+            },
+            "description": "Get summary for a specific user"
+          },
+          "response": []
+        }
+      ],
+      "description": "Search and reporting functionality"
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Set base URL if not already set",
+          "if (!pm.environment.get('base_url')) {",
+          "    pm.environment.set('base_url', 'http://localhost:8000');",
+          "}",
+          "",
+          "// Set API base URL",
+          "pm.environment.set('api_base', pm.environment.get('base_url') + '/api');"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Basic response validation",
+          "pm.test('Response status code is successful', function () {",
+          "    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202, 204]);",
+          "});",
+          "",
+          "pm.test('Response time is less than 5000ms', function () {",
+          "    pm.expect(pm.response.responseTime).to.be.below(5000);",
+          "});",
+          "",
+          "// Content-Type validation for JSON responses",
+          "if (pm.response.headers.get('Content-Type') && pm.response.headers.get('Content-Type').includes('application/json')) {",
+          "    pm.test('Response is valid JSON', function () {",
+          "        pm.response.to.have.jsonBody();",
+          "    });",
+          "}"
+        ]
+      }
+    }
+  ]
+}
