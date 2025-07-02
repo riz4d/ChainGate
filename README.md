@@ -15,13 +15,7 @@
 
 - [Overview](#overview)
 - [Architecture](#architecture)
-- [Project Structure](#project-structure)
-- [API Reference](#api-reference)
 - [Hardware Guide](#hardware-guide)
-- [Development](#development)
-- [Deployment](#deployment)
-- [Screenshots & Demos](#screenshots--demos)
-- [Support](#support)
 
 ## Overview
 
@@ -64,18 +58,3 @@ ChainGate follows the architecture with the following components:
                          └─────────────────┘
 ```
 
-
-## Project Structure
-
-```
-ChainGate/
-├── README.md                   # Main project documentation
-├── access-portal/              # Next.js frontend application
-├── chain-api/                  # Django backend API
-├── device-agents/              # Arduino firmware
-├── database/                   # Database exports and schemas
-├── deployment/                 # Docker and deployment configs
-├── docs/                      # Project documentation
-├── schematics/                # System diagrams
-└── tests/                     # Test files and Postman collections
-```
