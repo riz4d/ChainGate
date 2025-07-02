@@ -17,6 +17,9 @@
 - [Architecture](#architecture)
 - [Software Guide](#software-guide)
 - [Hardware Guide](#hardware-guide)
+- [Acknowledgement](#acknowledgement)
+
+## Overview
 
 ## Overview
 
@@ -85,3 +88,11 @@ The hardware component of ChainGate combines ESP32-S3 microcontrollers with PN53
 
 
 For detailed assembly instructions and files, see the [device-agent/](/device-agent/) directory.
+
+## Acknowledgement
+
+This project was developed as part of a research initiative to explore the integration of blockchain technology with physical access control systems. We would like to thank:
+
+- The open-source community for the libraries and frameworks that made this project possible
+
+ChainGate is released under the MIT License. We welcome contributions, feedback, and suggestions from the community.
