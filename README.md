@@ -21,8 +21,6 @@
 
 ## Overview
 
-## Overview
-
 ChainGate is a modern, blockchain-integrated access control system that combines NFC technology with distributed ledger security and AI-powered analytics. It provides real-time access management, user authentication, immutable audit trails through smart contract integration, and intelligent user behavior analysis through an integrated AI assistant that can answer natural language queries about user access patterns and history.
 
 #### Key Features
@@ -63,7 +61,7 @@ ChainGate follows the architecture with the following components:
 ```
 
 ## Software Guide
-### Overview
+#### Overview
 ChainGate's software stack consists of three main components that work together to provide a complete access control solution:
 
 1. **Access Portal (Frontend)**: Built with Next.js, this web application provides the user interface for system administration, monitoring, and analytics.
@@ -73,12 +71,11 @@ ChainGate's software stack consists of three main components that work together 
 3. **Device Agent (Firmware)**: ESP32 firmware written in Arduino that manages PN532 reading, access decisions, and communication with the backend.
 
 For more detailed documentation, see the [docs/](/docs/) directory.
+
 ## Hardware Guide
-
-### Overview
+#### Overview
 The hardware component of ChainGate combines ESP32-S3 microcontrollers with PN532 reader to create a secure physical access system. Each access point uses an ESP32-S3 board connected to a PN532 NFC module for card reading, with optional relay modules for electric lock control. The system is designed for low power consumption, reliable operation, and seamless integration with the blockchain backend for access verification and logging.
-
-### Components
+##### Components
 
 - **ESP32-S3 DevKit**: Main controller board with WiFi/BT capabilities
 - **PN532 NFC Module**: For reading RFID/NFC cards and tokens
