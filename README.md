@@ -11,6 +11,18 @@
 
 </div>
 
+## Table of Contents
+
+- [Overview](#overview)
+- [Architecture](#architecture)
+- [Project Structure](#project-structure)
+- [API Reference](#api-reference)
+- [Hardware Guide](#hardware-guide)
+- [Development](#development)
+- [Deployment](#deployment)
+- [Screenshots & Demos](#screenshots--demos)
+- [Support](#support)
+
 ## Overview
 
 ChainGate is a modern, blockchain-integrated access control system that combines NFC technology with distributed ledger security and AI-powered analytics. It provides real-time access management, user authentication, immutable audit trails through smart contract integration, and intelligent user behavior analysis through an integrated AI assistant that can answer natural language queries about user access patterns and history.
@@ -25,36 +37,45 @@ ChainGate is a modern, blockchain-integrated access control system that combines
 - **Real-Time Analytics**: Live blockchain status and transaction monitoring
 - **RESTful API**: Comprehensive backend with Django REST Framework
 
+## Architecture
 
-## Features & Functionality
+ChainGate follows the architecture with the following components:
 
-#### Access Control
-- **NFC Card Authentication**: Secure contactless access
-- **Real-time Validation**: Instant user verification
-- **Multi-level Permissions**: Customizable access levels
-- **Device Management**: Remote device configuration
+```
+┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐
+│   Access Portal │  │    Chain API    │  │  Device Agents  │
+│   (Next.js)     │  │   (Django)      │  │   (ESP32S3)     │
+│                 │  │                 │  │                 │
+│ ▪ Web Dashboard │  │ ▪ REST API      │  │ ▪ NFC Reading   │
+│ ▪ User Mgmt     │  │ ▪ Auth System   │  │ ▪ Access Control│
+│ ▪ AI Assistant  │  │ ▪ Blockchain    │  │ ▪ LED Feedback  │
+│ ▪ Real-time UI  │  │ ▪ Database      │  │ ▪ WiFi Comm     │
+└─────────────────┘  └─────────────────┘  └─────────────────┘
+         │                      │                      │
+         └──────────────────────┼──────────────────────┘
+                                │
+                         ┌─────────────────┐
+                         │   Blockchain    │
+                         │   (Ganache)     │
+                         │                 │
+                         │ ▪ Smart Contract│
+                         │ ▪ Access Logs   │
+                         │ ▪ Audit Trail   │
+                         └─────────────────┘
+```
 
-#### Blockchain Integration
-- **Immutable Logs**: Tamper-proof access records
-- **Smart Contracts**: Automated logging and verification
-- **Transaction Monitoring**: Real-time blockchain status
-- **Audit Trails**: Complete access history
 
-#### AI-Powered User Analytics
-- **Intelligent Assistant**: Chat-based interface for user data queries
-- **Natural Language Queries**: Ask questions like "When did riza last access the server room?"
-- **Contextual Responses**: Smart answers based on user's complete access history
-- **Real-time Insights**: Instant analysis of user data and access logs
+## Project Structure
 
-#### Web Dashboard
-- **Live Monitoring**: Real-time access events
-- **User Management**: Add, edit, and manage users
-- **AI Assistant**: Interactive AI chat for user profile analysis
-- **Device Control**: Configure and monitor hardware
-- **Settings**: System configuration and preferences
-
-#### Hardware Features
-- **Modular Design**: Expandable component architecture
-- **LED Feedback**: Visual access status indicators
-- **WiFi Connectivity**: Remote communication capabilities
-
+```
+ChainGate/
+├── README.md                   # Main project documentation
+├── access-portal/              # Next.js frontend application
+├── chain-api/                  # Django backend API
+├── device-agents/              # Arduino firmware
+├── database/                   # Database exports and schemas
+├── deployment/                 # Docker and deployment configs
+├── docs/                      # Project documentation
+├── schematics/                # System diagrams
+└── tests/                     # Test files and Postman collections
+```

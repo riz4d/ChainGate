@@ -1,0 +1,104 @@
+version: '3.8'
+
+services:
+  # MongoDB Database
+  mongodb:
+    image: mongo:6.0
+    container_name: chaingate-mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin123
+      MONGO_INITDB_DATABASE: chaingate
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+      - ./database:/docker-entrypoint-initdb.d:ro
+    networks:
+      - chaingate-network
+
+  ganache:
+    image: trufflesuite/ganache:latest
+    container_name: chaingate-ganache
+    restart: unless-stopped
+    ports:
+      - "8545:8545"
+    command: >
+      ganache
+      --host 0.0.0.0
+      --port 8545
+      --networkId 1337
+      --deterministic
+      --accounts 10
+      --defaultBalanceEther 100
+      --gasLimit 10000000
+      --gasPrice 20000000000
+      --unlock 0
+      --secure false
+      --verbose
+    networks:
+      - chaingate-network
+
+  chaingate-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: chaingate-app
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "3000:3000"
+      - "8000:8000"
+    environment:
+      - DEBUG=True
+      - SECRET_KEY=chaingate-secret-key-change-in-production
+      - ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0,chaingate-app
+      - MONGODB_USER=admin
+      - MONGODB_PASSWORD=admin123
+      - MONGODB_CONNECTION_STRING=mongodb://admin:admin123@mongodb:27017/chaingate?authSource=admin
+      - MONGODB_DATABASE_NAME=chaingate
+      - MONGODB_COLLECTION_USERS=users
+      - MONGODB_COLLECTION_CARDS=cards
+      - MONGODB_COLLECTION_ADMIN=admin
+      - MONGODB_COLLECTION_ACCESSLOG=accesslog
+      - MONGODB_COLLECTION_ACCESS_LEVELS=access_levels
+      - MONGODB_COLLECTION_ALERTCONFIG=alertconfig
+      - MONGODB_COLLECTION_DEVICES=devices
+      - MONGODB_COLLECTION_SETTINGS=settings
+      - BLOCKCHAIN_PROVIDER=http://ganache:8545
+      - BLOCKCHAIN_ACCOUNT_INDEX=0
+      - BLOCKCHAIN_NETWORK=testnet
+      - NEXT_PUBLIC_API_URL=http://localhost
+      - NEXT_PUBLIC_APP_NAME=ChainGate Access Portal
+      - NEXT_PUBLIC_APP_VERSION=1.0.0
+      - NEXT_PUBLIC_ENABLE_BLOCKCHAIN=true
+      - NEXT_PUBLIC_ENABLE_AI_ASSISTANT=true
+      - NEXT_PUBLIC_ENABLE_REAL_TIME=true
+    depends_on:
+      - mongodb
+      - ganache
+    volumes:
+      - ./logs:/var/log/supervisor
+      - ./chain-api/logs:/app/backend/logs
+    networks:
+      - chaingate-network
+    healthcheck:
+      test: ["/app/health_check.sh"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+volumes:
+  mongodb_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  chaingate-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
