@@ -13,30 +13,15 @@ private:
 
 public:
     LedController();
-    
-    // Initialize LED pins
     void init();
     
-    // Update LED state (call in main loop)
     void update();
-    
-    // Activate LED for specified duration
     void activate(int pin, unsigned long duration);
-    
-    // Turn off all LEDs
     void turnOffAll();
-    
-    // Check if LED is currently active
     bool isActive() const;
-    
-    // Get currently active LED pin
     int getActiveLedPin() const;
-    
-    // Startup animation
     void startupAnimation();
-    
-    // WiFi connection animation
     void wifiConnectedAnimation();
 };
 
-#endif // LED_CONTROLLER_H
+#endif
