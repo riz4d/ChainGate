@@ -27,9 +27,11 @@ The ChainGate Device Agent is an Arduino-based access control system that uses N
 
 - ESP32 Development Board
 - PN532 NFC Reader Module
+- Power Supply (5V/2A)
 - 2x LEDs (Green and Red)
 - 2x Current-limiting resistors (220Ω recommended)
 - Breadboard and jumper wires
+- Relay module for electric lock control
 
 ### Pin Configuration
 
@@ -381,5 +383,4 @@ This project depends on several excellent open-source libraries:
 
    - Verify server endpoint
    - Check network connectivity
-   - Review API format
-     ## Acknowledgments
+   - Review API format## Acknowledgments

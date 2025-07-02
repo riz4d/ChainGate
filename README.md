@@ -58,3 +58,18 @@ ChainGate follows the architecture with the following components:
                          └─────────────────┘
 ```
 
+## Hardware Guide
+
+### Overview
+The hardware component of ChainGate combines ESP32-S3 microcontrollers with PN532 reader to create a secure physical access system. Each access point uses an ESP32-S3 board connected to a PN532 NFC module for card reading, with optional relay modules for electric lock control. The system is designed for low power consumption, reliable operation, and seamless integration with the blockchain backend for access verification and logging.
+
+### Components
+
+- **ESP32-S3 DevKit**: Main controller board with WiFi/BT capabilities
+- **PN532 NFC Module**: For reading RFID/NFC cards and tokens
+- **Power Supply**: 5V/2A USB power adapter
+- **Jumper Wires**: For connecting components
+- **Relay module**:  For electric lock control
+
+
+For detailed assembly instructions and files, see the `/device-agent` directory.
