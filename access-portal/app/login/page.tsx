@@ -294,7 +294,7 @@ export default function LoginPage() {
 
         <div className="text-center space-y-2">
           <p className="text-xs text-gray-500">
-            Secured by authentication technology
+            Secured Authentication by ChainGate
           </p>
           <div className="flex justify-center gap-4 text-xs text-gray-400">
             <span>© 2025 ChainGate</span>

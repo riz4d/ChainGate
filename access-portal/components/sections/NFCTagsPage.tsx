@@ -737,10 +737,10 @@ export function NFCTagsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl md:text-4xl font-russone bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-            NFC Tags Management
+            Gate Management
           </h1>
           <p className="text-muted-foreground text-sm italic">
-            Manage and monitor all NFC tags in your system
+            Manage and monitor all gates in your system
           </p>
         </div>
         <div className="flex items-center gap-3">
